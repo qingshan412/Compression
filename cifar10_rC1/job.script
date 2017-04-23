@@ -1,0 +1,12 @@
+#!/bin/csh
+
+#$ -M jliu16@nd.edu	 # Email address for job notification
+#$ -m abe		 # Send mail when job begins, ends and aborts
+#$ -q gpu
+#$ -pe smp 4		 # Specify parallel environment and legal core size
+#$ -N cifar10_training_c2   # Specify job name
+
+module load cuda/8.0     # Required modules
+module load tensorflow/0.12-python2	         # Required modules
+
+python cifar10_train.py > training_record # Application to execute
