@@ -345,7 +345,7 @@ def inputs_2(eval_data, data_dir, batch_size):
                                                          width, height)
   ###J.L. 
   resized_image = tf.image.random_contrast(resized_image,
-                                             lower=0.2, upper=1.0)
+                                             lower=1.0, upper=1.8)
   # Subtract off the mean and divide by the variance of the pixels.
   float_image = tf.image.per_image_standardization(resized_image)
 
