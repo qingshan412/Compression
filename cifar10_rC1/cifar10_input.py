@@ -251,8 +251,7 @@ def distorted_inputs_2(data_dir, batch_size):
                                          min_queue_examples, batch_size,
                                          shuffle=True)
 
-
-def inputs(eval_data, data_dir, batch_size):
+def inputs_1(eval_data, data_dir, batch_size):
   """Construct input for CIFAR evaluation using the Reader ops.
 
   Args:
@@ -290,7 +289,9 @@ def inputs(eval_data, data_dir, batch_size):
   # Crop the central [height, width] of the image.
   resized_image = tf.image.resize_image_with_crop_or_pad(reshaped_image,
                                                          width, height)
-
+  ###J.L. 
+  resized_image = tf.image.random_contrast(resized_image,
+                                             lower=0.2, upper=1.0)
   # Subtract off the mean and divide by the variance of the pixels.
   float_image = tf.image.per_image_standardization(resized_image)
 
@@ -303,3 +304,5 @@ def inputs(eval_data, data_dir, batch_size):
   return _generate_image_and_label_batch(float_image, read_input.label,
                                          min_queue_examples, batch_size,
                                          shuffle=False)
+
+def inputs_2(eval_data, data_dir, batch_size):
