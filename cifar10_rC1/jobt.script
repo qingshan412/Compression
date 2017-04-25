@@ -4,9 +4,9 @@
 #$ -m abe		 # Send mail when job begins, ends and aborts
 #$ -pe smp 4		 # Specify parallel environment and legal core size
 #$ -q gpu		 # Specify queue
-#$ -N cf10_rC12_e   # Specify job name
+#$ -N cf10_rC12   # Specify job name
 
 module load python cuda/8.0 tensorflow/0.12-python2	         # Required modules
 
-python cifar10_eval_1.py > eval1_record # Application to execute
-python cifar10_eval_2.py > eval2_record # Application to execute
+python cifar10_train_1.py > train1_record # Application to execute
+python cifar10_train_2.py > train2_record # Application to execute
