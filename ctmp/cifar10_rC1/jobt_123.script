@@ -1,0 +1,18 @@
+#!/bin/csh
+
+#$ -M jliu16@nd.edu	 # Email address for job notification
+#$ -m abe		 # Send mail when job begins, ends and aborts
+#$ -pe smp 4		 # Specify parallel environment and legal core size
+#$ -q gpu		 # Specify queue
+#$ -N cf10_rC1s123   # Specify job name
+
+module load python cuda/8.0 tensorflow/0.12-python2	         # Required modules
+
+python cifar10_train_1_1.py > train1s1_record # Application to execute
+python cifar10_train_2_1.py > train2s1_record # Application to execute
+
+python cifar10_train_1_2.py > train1s2_record # Application to execute
+python cifar10_train_2_2.py > train2s2_record # Application to execute
+
+python cifar10_train_1_3.py > train1s3_record # Application to execute
+python cifar10_train_2_3.py > train2s3_record # Application to execute
