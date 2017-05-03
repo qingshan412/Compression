@@ -26,7 +26,7 @@ tf.app.flags.DEFINE_boolean('log_device_placement', False,
 tf.app.flags.DEFINE_integer('contrastcase', 0,
                             """Number of batches to run.""")
 
-tf.app.flags.DEFINE_string('data_dir', './data',
+tf.app.flags.DEFINE_string('data_dir', '../data',
                            """Path to the CIFAR-10 data directory.""")
 
 
