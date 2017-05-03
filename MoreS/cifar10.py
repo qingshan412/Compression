@@ -794,7 +794,7 @@ def inference1_4(images):
   return softmax_linear
 
 
-def inference1_3(images):
+def inference1_5(images):
   """Build the CIFAR-10 model. 
   1 conv (7x6), 2 local
 

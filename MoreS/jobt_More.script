@@ -1,4 +1,4 @@
-#!/bin/csh
+#!/bin/sh
 
 #$ -M jliu16@nd.edu	 # Email address for job notification
 #$ -m abe		 # Send mail when job begins, ends and aborts

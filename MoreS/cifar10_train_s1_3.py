@@ -49,7 +49,7 @@ import cifar10
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string('train_dir', './tmp/2/s2/cifar10_train',
+tf.app.flags.DEFINE_string('train_dir', './tmp/1/0_s1_1/cifar10_train',
                            """Directory where to write event logs """
                            """and checkpoint.""")
 tf.app.flags.DEFINE_integer('max_steps', 1000000,
@@ -70,7 +70,7 @@ def train():
 
     # Build a Graph that computes the logits predictions from the
     # inference model.
-    logits = cifar10.inference2_2(images)
+    logits = cifar10.inference1_3(images)
 
     # Calculate loss.
     loss = cifar10.loss(logits, labels)
