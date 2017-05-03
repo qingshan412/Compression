@@ -63,6 +63,7 @@ tf.app.flags.DEFINE_integer('contrastcase', 0,
 
 def train():
   print(FLAGS.contrastcase)
+  print(FLAGS.train_dir)
 
 
 def main(argv=None):  # pylint: disable=unused-argument

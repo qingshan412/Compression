@@ -57,6 +57,8 @@ tf.app.flags.DEFINE_integer('max_steps', 1000000,
 tf.app.flags.DEFINE_boolean('log_device_placement', False,
                             """Whether to log device placement.""")
 
+tf.app.flags.DEFINE_integer('contrastcase', 0,
+                            """Number of contrast class.""")
 
 def train():
   """Train CIFAR-10 for a number of steps."""
@@ -64,11 +66,11 @@ def train():
     global_step = tf.Variable(0, trainable=False)
 
     # Get images and labels for CIFAR-10.
-    images, labels = cifar10.distorted_inputs_1()
+    images, labels = cifar10.distorted_inputs(FLAGS.contrastcase)
 
     # Build a Graph that computes the logits predictions from the
     # inference model.
-    logits = cifar10.inference1(images)
+    logits = cifar10.inference1_1(images)
 
     # Calculate loss.
     loss = cifar10.loss(logits, labels)
