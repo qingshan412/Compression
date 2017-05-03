@@ -60,10 +60,15 @@ tf.app.flags.DEFINE_boolean('log_device_placement', False,
 tf.app.flags.DEFINE_integer('contrastcase', 0,
                             """Number of batches to run.""")
 
+tf.app.flags.DEFINE_string('data_dir', '../data',
+                           """Path to the CIFAR-10 data directory.""")
+
 
 def train():
   print(FLAGS.contrastcase)
   print(FLAGS.train_dir)
+  if not os.path.exists(FLAGS.data_dir):
+    os.makedirs(FLAGS.data_dir)
 
 
 def main(argv=None):  # pylint: disable=unused-argument
