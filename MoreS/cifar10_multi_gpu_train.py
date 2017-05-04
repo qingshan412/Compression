@@ -98,7 +98,7 @@ def tower_loss(scope):
     # Remove 'tower_[0-9]/' from the name in case this is a multi-GPU training
     # session. This helps the clarity of presentation on tensorboard.
     loss_name = re.sub('%s_[0-9]*/' % cifar10.TOWER_NAME, '', l.op.name)
-    tf.scalar_summary(loss_name, l)
+    tf.summary.scalar(loss_name, l)
 
   return total_loss
 
