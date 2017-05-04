@@ -63,6 +63,8 @@ tf.app.flags.DEFINE_integer('num_gpus', 2,
                             """How many GPUs to use.""")
 tf.app.flags.DEFINE_boolean('log_device_placement', False,
                             """Whether to log device placement.""")
+tf.app.flags.DEFINE_integer('contrastcase', 0,
+                            """Number of contrast class.""")
 
 
 def tower_loss(scope):
@@ -75,10 +77,10 @@ def tower_loss(scope):
      Tensor of shape [] containing the total loss for a batch of data
   """
   # Get images and labels for CIFAR-10.
-  images, labels = cifar10.distorted_inputs()
+  images, labels = cifar10.distorted_inputs(FLAGS.contrastcase)
 
   # Build inference Graph.
-  logits = cifar10.inference(images)
+  logits = cifar10.inference1_1(images)
 
   # Build the portion of the Graph calculating the losses. Note that we will
   # assemble the total_loss using a custom function below.
