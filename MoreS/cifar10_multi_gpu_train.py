@@ -128,9 +128,9 @@ def average_gradients(tower_grads):
       # Append on a 'tower' dimension which we will average over below.
       grads.append(expanded_g)
 
-    print('grads\' type:')
-    print(grads[0].dtype)
-    print(grads)
+    #print('grads\' type:')
+    #print(grads[0].dtype)
+    #print(grads)
     # Average over the 'tower' dimension.
     #J.L. grad = tf.concat(0, grads)
     grad = tf.concat(grads, 0)
