@@ -14,10 +14,13 @@
 # ==============================================================================
 
 """A binary to train CIFAR-10 using multiple GPU's with synchronous updates.
+
 Accuracy:
 cifar10_multi_gpu_train.py achieves ~86% accuracy after 100K steps (256
 epochs of data) as judged by cifar10_eval.py.
+
 Speed: With batch_size 128.
+
 System        | Step Time (sec/batch)  |     Accuracy
 --------------------------------------------------------------------
 1 Tesla K20m  | 0.35-0.60              | ~86% at 60K steps  (5 hours)
@@ -25,9 +28,11 @@ System        | Step Time (sec/batch)  |     Accuracy
 2 Tesla K20m  | 0.13-0.20              | ~84% at 30K steps  (2.5 hours)
 3 Tesla K20m  | 0.13-0.18              | ~84% at 30K steps
 4 Tesla K20m  | ~0.10                  | ~84% at 30K steps
+
 Usage:
 Please see the tutorial and website for how to download the CIFAR-10
 data set, compile the program and train the model.
+
 http://tensorflow.org/tutorials/deep_cnn/
 """
 from __future__ import absolute_import
@@ -42,15 +47,18 @@ import time
 import numpy as np
 from six.moves import xrange  # pylint: disable=redefined-builtin
 import tensorflow as tf
+
 import cifar10
+###J.L. from tensorflow.models.image.cifar10 import cifar10
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string('train_dir', '/tmp/cifar10_train',
+tf.app.flags.DEFINE_string('train_dir', './tmp/cifar10_train',
                            """Directory where to write event logs """
                            """and checkpoint.""")
-tf.app.flags.DEFINE_integer('max_steps', 1000000,
+tf.app.flags.DEFINE_integer('max_steps', 1000,
                             """Number of batches to run.""")
+###J.L. tf.app.flags.DEFINE_integer('num_gpus', 2,
 tf.app.flags.DEFINE_integer('num_gpus', 2,
                             """How many GPUs to use.""")
 tf.app.flags.DEFINE_boolean('log_device_placement', False,
@@ -61,8 +69,10 @@ tf.app.flags.DEFINE_integer('contrastcase', 0,
 
 def tower_loss(scope):
   """Calculate the total loss on a single tower running the CIFAR model.
+
   Args:
     scope: unique prefix string identifying the CIFAR tower, e.g. 'tower_0'
+
   Returns:
      Tensor of shape [] containing the total loss for a batch of data
   """
@@ -95,7 +105,9 @@ def tower_loss(scope):
 
 def average_gradients(tower_grads):
   """Calculate the average gradient for each shared variable across all towers.
+
   Note that this function provides a synchronization point across all towers.
+
   Args:
     tower_grads: List of lists of (gradient, variable) tuples. The outer list
       is over individual gradients. The inner list is over the gradient
@@ -116,8 +128,12 @@ def average_gradients(tower_grads):
       # Append on a 'tower' dimension which we will average over below.
       grads.append(expanded_g)
 
+    #print('grads\' type:')
+    #print(grads[0].dtype)
+    #print(grads)
     # Average over the 'tower' dimension.
-    grad = tf.concat(axis=0, values=grads)
+    #J.L. grad = tf.concat(0, grads)
+    grad = tf.concat(grads, 0)
     grad = tf.reduce_mean(grad, 0)
 
     # Keep in mind that the Variables are redundant because they are shared
@@ -164,17 +180,17 @@ def train():
             # all towers.
             loss = tower_loss(scope)
 
-            # Reuse variables for the next tower.
-            tf.get_variable_scope().reuse_variables()
+          # Reuse variables for the next tower.
+          tf.get_variable_scope().reuse_variables()
 
-            # Retain the summaries from the final tower.
-            summaries = tf.get_collection(tf.GraphKeys.SUMMARIES, scope)
+          # Retain the summaries from the final tower.
+          summaries = tf.get_collection(tf.GraphKeys.SUMMARIES, scope)
 
-            # Calculate the gradients for the batch of data on this CIFAR tower.
-            grads = opt.compute_gradients(loss)
+          # Calculate the gradients for the batch of data on this CIFAR tower.
+          grads = opt.compute_gradients(loss)
 
-            # Keep track of the gradients across all towers.
-            tower_grads.append(grads)
+          # Keep track of the gradients across all towers.
+          tower_grads.append(grads)
 
     # We must calculate the mean of each gradient. Note that this is the
     # synchronization point across all towers.
@@ -186,7 +202,8 @@ def train():
     # Add histograms for gradients.
     for grad, var in grads:
       if grad is not None:
-        summaries.append(tf.summary.histogram(var.op.name + '/gradients', grad))
+        summaries.append(
+            tf.summary.histogram(var.op.name + '/gradients', grad))
 
     # Apply the gradients to adjust the shared variables.
     apply_gradient_op = opt.apply_gradients(grads, global_step=global_step)
@@ -204,7 +221,7 @@ def train():
     train_op = tf.group(apply_gradient_op, variables_averages_op)
 
     # Create a saver.
-    saver = tf.train.Saver(tf.global_variables())
+    saver = tf.train.Saver(tf.all_variables())
 
     # Build the summary operation from the last tower summaries.
     summary_op = tf.summary.merge(summaries)
@@ -244,7 +261,8 @@ def train():
 
       if step % 100 == 0:
         summary_str = sess.run(summary_op)
-        summary_writer.add_summary(summary_str, step)
+        tf.summary.FileWriter.add_summary(summary_str, step)
+        #J.L. summary_writer.add_summary(summary_str, step)
 
       # Save the model checkpoint periodically.
       if step % 1000 == 0 or (step + 1) == FLAGS.max_steps:
