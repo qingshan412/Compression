@@ -196,7 +196,7 @@ def train():
     grads = average_gradients(tower_grads)
 
     # Add a summary to track the learning rate.
-    summaries.append(tf.scalar_summary('learning_rate', lr))
+    summaries.append(tf.summary.scalar('learning_rate', lr))
 
     # Add histograms for gradients.
     for grad, var in grads:
