@@ -179,7 +179,7 @@ def train():
             # constructs the entire CIFAR model but shares the variables across
             # all towers.
             loss = tower_loss(scope)
-            
+
           # Reuse variables for the next tower.
           tf.get_variable_scope().reuse_variables()
 
@@ -261,7 +261,7 @@ def train():
 
       if step % 100 == 0:
         summary_str = sess.run(summary_op)
-        tf.train.SummaryWriter.add_summary(summary_str, step)
+        tf.summary.FileWriter.add_summary(summary_str, step)
         #J.L. summary_writer.add_summary(summary_str, step)
 
       # Save the model checkpoint periodically.
