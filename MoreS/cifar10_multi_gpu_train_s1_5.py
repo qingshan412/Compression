@@ -46,7 +46,7 @@ import cifar10
 
 FLAGS = tf.app.flags.FLAGS
 
-tf.app.flags.DEFINE_string('train_dir', '/tmp/cifar10_train',
+tf.app.flags.DEFINE_string('train_dir', './tmp/1/0_s1_1/cifar10_train',
                            """Directory where to write event logs """
                            """and checkpoint.""")
 tf.app.flags.DEFINE_integer('max_steps', 1000000,
@@ -70,7 +70,7 @@ def tower_loss(scope):
   images, labels = cifar10.distorted_inputs(FLAGS.contrastcase)
 
   # Build inference Graph.
-  logits = cifar10.inference1_1(images)
+  logits = cifar10.inference1_5(images)
 
   # Build the portion of the Graph calculating the losses. Note that we will
   # assemble the total_loss using a custom function below.
