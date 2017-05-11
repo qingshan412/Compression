@@ -2261,7 +2261,7 @@ def inference4_4(images):
 
 def inference4_5(images):
   """Build the CIFAR-10 model.
-     1 conv (5x2), 0 local
+     1 conv (7x6), 0 local
   Args:
     images: Images returned from distorted_inputs() or inputs().
 
