@@ -1989,7 +1989,7 @@ def inference4(images):
     #                                      stddev=1/192.0, wd=0.0)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0))
-    softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
+    softmax_linear = tf.add(tf.matmul(reshape, weights), biases, name=scope.name)
     _activation_summary(softmax_linear)
 
   return softmax_linear
@@ -2042,7 +2042,7 @@ def inference4_0(images):
     #                                      stddev=1/192.0, wd=0.0)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0))
-    softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
+    softmax_linear = tf.add(tf.matmul(reshape, weights), biases, name=scope.name)
     _activation_summary(softmax_linear)
 
   return softmax_linear
@@ -2095,7 +2095,7 @@ def inference4_1(images):
     #                                      stddev=1/192.0, wd=0.0)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0))
-    softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
+    softmax_linear = tf.add(tf.matmul(reshape, weights), biases, name=scope.name)
     _activation_summary(softmax_linear)
 
   return softmax_linear
@@ -2148,7 +2148,7 @@ def inference4_2(images):
     #                                      stddev=1/192.0, wd=0.0)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0))
-    softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
+    softmax_linear = tf.add(tf.matmul(reshape, weights), biases, name=scope.name)
     _activation_summary(softmax_linear)
 
   return softmax_linear
@@ -2201,7 +2201,7 @@ def inference4_3(images):
     #                                      stddev=1/192.0, wd=0.0)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0))
-    softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
+    softmax_linear = tf.add(tf.matmul(reshape, weights), biases, name=scope.name)
     _activation_summary(softmax_linear)
 
   return softmax_linear
@@ -2254,7 +2254,7 @@ def inference4_4(images):
     #                                      stddev=1/192.0, wd=0.0)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0))
-    softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
+    softmax_linear = tf.add(tf.matmul(reshape, weights), biases, name=scope.name)
     _activation_summary(softmax_linear)
 
   return softmax_linear
@@ -2307,7 +2307,7 @@ def inference4_5(images):
     #                                      stddev=1/192.0, wd=0.0)
     biases = _variable_on_cpu('biases', [NUM_CLASSES],
                               tf.constant_initializer(0.0))
-    softmax_linear = tf.add(tf.matmul(local4, weights), biases, name=scope.name)
+    softmax_linear = tf.add(tf.matmul(reshape, weights), biases, name=scope.name)
     _activation_summary(softmax_linear)
 
   return softmax_linear
