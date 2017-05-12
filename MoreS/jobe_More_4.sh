@@ -86,7 +86,7 @@ python cifar10_eval_s4_1.py --eval_dir ./tmp/7/s4_1/cifar10_eval --checkpoint_di
 echo "7:eval s4_1 finished!" >> eval_process
 
 python cifar10_eval_s4_0.py --eval_dir ./tmp/0/s4_0/cifar10_eval --checkpoint_dir ./tmp/0/s4_0/cifar10_train --contrastcase 0 &> ./record/c0/eval0s4_0_record 
-echo "0:eval s4_0 finished!" > eval_process
+echo "0:eval s4_0 finished!" >> eval_process
 python cifar10_eval_s4_0.py --eval_dir ./tmp/1/s4_0/cifar10_eval --checkpoint_dir ./tmp/1/s4_0/cifar10_train --contrastcase 1 &> ./record/c1/eval1s4_0_record 
 echo "1:eval s4_0 finished!" >> eval_process
 python cifar10_eval_s4_0.py --eval_dir ./tmp/2/s4_0/cifar10_eval --checkpoint_dir ./tmp/2/s4_0/cifar10_train --contrastcase 2 &> ./record/c2/eval2s4_0_record 

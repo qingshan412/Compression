@@ -68,7 +68,7 @@ python cifar10_multi_gpu_train_s4_2.py --train_dir ./tmp/7/s4_2/cifar10_train --
 echo "7:train s4_2 finished!" >> train_process
 
 python cifar10_multi_gpu_train_s4_1.py --train_dir ./tmp/0/s4_1/cifar10_train --contrastcase 0 &> ./record/c0/train0s4_1_record 
-echo "0:train s4_1 finished!" > train_process
+echo "0:train s4_1 finished!" >> train_process
 python cifar10_multi_gpu_train_s4_1.py --train_dir ./tmp/1/s4_1/cifar10_train --contrastcase 1 &> ./record/c1/train1s4_1_record 
 echo "1:train s4_1 finished!" >> train_process
 python cifar10_multi_gpu_train_s4_1.py --train_dir ./tmp/2/s4_1/cifar10_train --contrastcase 2 &> ./record/c2/train2s4_1_record 

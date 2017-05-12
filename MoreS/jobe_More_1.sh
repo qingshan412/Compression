@@ -1,7 +1,7 @@
 #!/bin/sh
 
 python cifar10_eval_s1_0.py --eval_dir ./tmp/0/s1_0/cifar10_eval --checkpoint_dir ./tmp/0/s1_0/cifar10_train --contrastcase 0 &> ./record/c0/eval0s1_0_record 
-echo "0:eval s1_0 finished!" > eval_process
+echo "0:eval s1_0 finished!" >> eval_process
 python cifar10_eval_s1_0.py --eval_dir ./tmp/1/s1_0/cifar10_eval --checkpoint_dir ./tmp/1/s1_0/cifar10_train --contrastcase 1 &> ./record/c1/eval1s1_0_record 
 echo "1:eval s1_0 finished!" >> eval_process
 python cifar10_eval_s1_0.py --eval_dir ./tmp/2/s1_0/cifar10_eval --checkpoint_dir ./tmp/2/s1_0/cifar10_train --contrastcase 2 &> ./record/c2/eval2s1_0_record 

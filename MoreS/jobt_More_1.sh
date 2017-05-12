@@ -1,7 +1,7 @@
 #!/bin/sh
 
 python cifar10_multi_gpu_train_s1_0.py --train_dir ./tmp/0/s1_0/cifar10_train --contrastcase 0 &> ./record/c0/train0s1_0_record 
-echo "0:train s1_0 finished!" > train_process
+echo "0:train s1_0 finished!" >> train_process
 python cifar10_multi_gpu_train_s1_0.py --train_dir ./tmp/1/s1_0/cifar10_train --contrastcase 1 &> ./record/c1/train1s1_0_record 
 echo "1:train s1_0 finished!" >> train_process
 python cifar10_multi_gpu_train_s1_0.py --train_dir ./tmp/2/s1_0/cifar10_train --contrastcase 2 &> ./record/c2/train2s1_0_record 
