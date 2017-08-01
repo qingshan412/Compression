@@ -88,6 +88,11 @@ def tower_loss(scope):
   # Calculate the total loss for the current tower.
   total_loss = tf.add_n(losses, name='total_loss')
 
+  # J.L. 
+  print('total_loss.scope:')
+  print(total_loss.scope)
+  exit(0)
+
   # Attach a scalar summary to all individual losses and the total loss; do the
   # same for the averaged version of the losses.
   for l in losses + [total_loss]:
@@ -179,9 +184,6 @@ def train():
 
               # Reuse variables for the next tower.
               tf.get_variable_scope().reuse_variables()
-              #print(tf.get_variable_scope().reuse_variables())
-              #print(tf.get_variable_scope().reuse)
-
 
               # Retain the summaries from the final tower.
               summaries = tf.get_collection(tf.GraphKeys.SUMMARIES, scope)
