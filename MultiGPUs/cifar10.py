@@ -295,7 +295,7 @@ def loss(logits, labels):
   # J.L. 
   print('cross_entropy_mean.scope:')
   print(cross_entropy_mean.scope)
-  
+
   return tf.add_n(tf.get_collection('losses'), name='total_loss')
 
 
