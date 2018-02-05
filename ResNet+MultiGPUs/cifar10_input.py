@@ -195,7 +195,7 @@ def distorted_inputs(data_dir, batch_size):
                                          shuffle=True)
 
 
-def build_input(dataset='cifar10', data_path, batch_size=128, mode):
+def build_input(data_path, mode, batch_size=128, dataset='cifar10'):
   """Build CIFAR image and labels.
 
   Args:
