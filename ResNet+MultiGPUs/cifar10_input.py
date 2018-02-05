@@ -195,7 +195,7 @@ def distorted_inputs(data_dir, batch_size):
                                          shuffle=True)
 
 
-def build_input(data_path, mode, batch_size=128, dataset='cifar10'):
+def build_input(data_path, batch_size, mode, dataset='cifar10'):
   """Build CIFAR image and labels.
 
   Args:
@@ -293,7 +293,6 @@ def build_input(data_path, mode, batch_size=128, dataset='cifar10'):
   # Display the training images in the visualizer.
   #tf.summary.image('images', images)
   return images, labels
-
 
 def inputs(eval_data, data_dir, batch_size):
   """Construct input for CIFAR evaluation using the Reader ops.
