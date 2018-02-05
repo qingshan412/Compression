@@ -314,6 +314,7 @@ def inference_resnet_20(images, n2=3):
   for group_i, group in enumerate(groups):
     for block_i in range(group.num_blocks):
       name = 'group_%d/block_%d' % (group_i, block_i)
+      print(str(group_i) + ',' + str(block_i))
       if group_i > 0 and block_i < 1:
         # subsampling
         with tf.variable_scope(name + '/conv_in'):
@@ -348,13 +349,17 @@ def inference_resnet_20(images, n2=3):
 
       # shortcut connections 
       if conv.get_shape()[-1].value != net.get_shape()[-1].value:
+        #print(net.get_shape().as_list())
+        #print(conv.get_shape().as_list())
         net = tf.layers.conv2d(
             net,
-            filters=net.get_shape()[-1].value,
+            filters=conv.get_shape()[-1].value,
             kernel_size=1,
             strides=(2, 2),
             padding='same',
             activation=None)
+        #print(net.get_shape().as_list())
+        #print(conv.get_shape().as_list())
         assert conv.get_shape()[-1].value == net.get_shape()[-1].value
         net = conv + net
       else:
@@ -373,7 +378,7 @@ def inference_resnet_20(images, n2=3):
   net = tf.reshape(net, [-1, net_shape[1] * net_shape[2] * net_shape[3]])
 
   # Compute logits (1 per class) and compute loss.
-  logits = tf.layers.dense(net, NUM_CLASSES, activation=None)
+  logits = tf.layers.dense(net, NUM_CLASSES, activation=tf.nn.softmax)
 
   return logits
 
@@ -407,6 +412,26 @@ def loss(logits, labels):
   #print(cross_entropy_mean.scope)
 
   return tf.add_n(tf.get_collection('losses'), name='total_loss')
+
+def accuracy(logits, labels):
+  """Add accuracy on training to all the trainable variables.
+  Args:
+    logits: Logits from inference().
+    labels: Labels from distorted_inputs or inputs(). 1-D tensor
+            of shape [batch_size]
+
+  Returns:
+    Accuracy tensor of type float.
+  """
+  # Calculate the accuracy on training.
+  #print(labels.get_shape().as_list())
+  labels = tf.cast(labels, tf.int64)
+  prediction = tf.nn.in_top_k(logits, labels, 1) 
+  accuracy = tf.reduce_mean(tf.cast(prediction, tf.int32))
+
+  tf.add_to_collection('accuracys', accuracy)
+
+  return tf.add_n(tf.get_collection('accuracys'), name='total_accuracys')
 
 
 def _add_loss_summaries(total_loss):

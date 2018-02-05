@@ -43,6 +43,7 @@ from datetime import datetime
 import os.path
 import re
 import time
+import math
 
 import numpy as np
 from six.moves import xrange  # pylint: disable=redefined-builtin
@@ -59,7 +60,7 @@ tf.app.flags.DEFINE_string('train_dir', './tmp/cifar10_train_multi',
 tf.app.flags.DEFINE_string('data_dir', '../../cifar10_data/cifar-10-batches-bin',
                            """Path to the CIFAR-10 data directory.""")
 tf.app.flags.DEFINE_integer('batch_size', 128, """Number of images to process in a batch.""")
-tf.app.flags.DEFINE_integer('max_steps', 64000,
+tf.app.flags.DEFINE_integer('max_steps', 600, #64000,
                             """Number of batches to run.""")
 tf.app.flags.DEFINE_integer('num_gpus', 2,
                             """How many GPUs to use.""")
@@ -102,23 +103,23 @@ def tower_loss(scope):
     #print('total_loss.scope:')
     #print(total_loss.scope)
     #exit(0)
-    _ = cifar10_net.accuracy(logits, labels)
+    #_ = cifar10_net.accuracy(logits, labels)
 
     # Assemble all of the accuracy for the current tower only.
-    accuracys = tf.get_collection('accuracys', scope)
+    #accuracys = tf.get_collection('accuracys', scope)
 
     # Calculate the total loss for the current tower.
-    total_accuracy = tf.add_n(accuracys, name='total_accuracy')
+    #total_accuracy = tf.add_n(accuracys, name='total_accuracy')
 
     # Attach a scalar summary to all individual losses and the total loss; do the
     # same for the averaged version of the losses.
-    for l in losses + [total_loss]:
+    #for l in losses + [total_loss]:
       # Remove 'tower_[0-9]/' from the name in case this is a multi-GPU training
       # session. This helps the clarity of presentation on tensorboard.
-      loss_name = re.sub('%s_[0-9]*/' % cifar10_net.TOWER_NAME, '', l.op.name)
-      tf.summary.scalar(loss_name, l)
+    #  loss_name = re.sub('%s_[0-9]*/' % cifar10_net.TOWER_NAME, '', l.op.name)
+    #  tf.summary.scalar(loss_name, l)
 
-  return total_loss, total_accuracy
+  return total_loss#, total_accuracy
 
 
 def average_gradients(tower_grads):
@@ -171,11 +172,23 @@ def eval_in_train():
     # Build a Graph that computes the logits predictions from the
     # inference model.
     logits_e = cifar10_net.inference_resnet_20(images_e)
+    # print(logits_e.get_shape().as_list())
 
     # Calculate predictions.
     top_k_op = tf.nn.in_top_k(logits_e, labels_e, 1)
+    # print(top_k_op.get_shape().as_list())
+    # exit(0)
+
+    # Calculate accuracy
+    accuracy = tf.reduce_mean(tf.cast(top_k_op, tf.float32))
     
-  return top_k_op
+  return accuracy
+
+def avg_accur(accuracy):
+  #for accur in accuracy:
+  accur = tf.stack(accuracy, 0)
+  accur = tf.reduce_mean(accur, 0)
+  return accur
 
 def train():
   """Train CIFAR-10 for a number of steps."""
@@ -189,16 +202,10 @@ def train():
     # Calculate the learning rate schedule.
     lr_boundaries = [32000.0, 48000.0]
     lr_values = [0.1, 0.01, 0.001]
-    #learning_rate = tf.train.piecewise_constant(global_step, boundaries, values)
 
     # Decay the learning rate exponentially based on the number of steps.
     lr = tf.train.piecewise_constant(global_step, lr_boundaries, lr_values)
-    #lr = tf.train.exponential_decay(cifar10_net.INITIAL_LEARNING_RATE,
-    #                                global_step,
-    #                                decay_steps,
-    #                                cifar10_net.LEARNING_RATE_DECAY_FACTOR,
-    #                                staircase=True)
-
+    
     # Create an optimizer that performs gradient descent.
     opt = tf.train.GradientDescentOptimizer(lr)
 
@@ -210,12 +217,12 @@ def train():
         for i in xrange(FLAGS.num_gpus):
           with tf.device('/gpu:%d' % i):
             with tf.name_scope('%s_%d' % (cifar10_net.TOWER_NAME, i)) as scope:
-              print('/gpu:%d' % i)
-              print('%s_%d' % (cifar10_net.TOWER_NAME, i))
+              #print('/gpu:%d' % i)
+              #print('%s_%d' % (cifar10_net.TOWER_NAME, i))
               # Calculate the loss for one tower of the CIFAR model. This function
               # constructs the entire CIFAR model but shares the variables across
               # all towers.
-              loss, accuracy = tower_loss(scope)
+              loss = tower_loss(scope)
 
               # Reuse variables for the next tower.
               tf.get_variable_scope().reuse_variables()
@@ -237,25 +244,25 @@ def train():
     grads = average_gradients(tower_grads)
 
     # Add a summary to track the learning rate.
-    summaries.append(tf.summary.scalar('learning_rate', lr))
+    #summaries.append(tf.summary.scalar('learning_rate', lr))
 
     # Add histograms for gradients.
-    for grad, var in grads:
-      if grad is not None:
-        summaries.append(
-            tf.summary.histogram(var.op.name + '/gradients', grad))
+    #for grad, var in grads:
+    #  if grad is not None:
+    #    summaries.append(
+    #        tf.summary.histogram(var.op.name + '/gradients', grad))
 
     # Apply the gradients to adjust the shared variables.
     apply_gradient_op = opt.apply_gradients(grads, global_step=global_step)
 
     # Add histograms for trainable variables.
-    for var in tf.trainable_variables():
-      summaries.append(tf.summary.histogram(var.op.name, var))
+    #for var in tf.trainable_variables():
+    #  summaries.append(tf.summary.histogram(var.op.name, var))
 
     # Track the moving averages of all trainable variables.
     variable_averages = tf.train.ExponentialMovingAverage(
         cifar10_net.MOVING_AVERAGE_DECAY, global_step)
-    print(tf.trainable_variables)
+    #print(tf.trainable_variables)
     variables_averages_op = variable_averages.apply(tf.trainable_variables())
 
     # Group all updates to into a single train op.
@@ -266,6 +273,20 @@ def train():
 
     # Build the summary operation from the last tower summaries.
     summary_op = tf.summary.merge(summaries)
+
+    # Eval
+    num_iter = int(math.ceil(FLAGS.num_examples / FLAGS.batch_size))
+    true_count = 0  # Counts the number of correct predictions.
+    total_sample_count = num_iter * FLAGS.batch_size
+    step = 0
+    accuracy = []
+    with tf.variable_scope(tf.get_variable_scope()):
+      tf.get_variable_scope().reuse_variables()
+      for j in xrange(num_iter):
+        accur_on_test = eval_in_train()
+        accuracy.append(accur_on_test)
+    eval_v = avg_accur(accuracy)
+
 
     # Build an initialization operation to run below.
     init = tf.global_variables_initializer()
@@ -283,9 +304,12 @@ def train():
 
     summary_writer = tf.summary.FileWriter(FLAGS.train_dir, sess.graph)
 
+    print(sess.run(accur_on_test))
+    exit(0)
+
     for step in xrange(FLAGS.max_steps):
       start_time = time.time()
-      _, loss_value, accur_value = sess.run([train_op, loss, accuracy])
+      _, loss_value = sess.run([train_op, loss])
       duration = time.time() - start_time
 
       assert not np.isnan(loss_value), 'Model diverged with loss = NaN'
@@ -301,6 +325,8 @@ def train():
       #                        examples_per_sec, sec_per_batch))
 
       if step % 100 == 0:
+
+        accur_value = sess.run(eval_v)
 
         num_examples_per_step = FLAGS.batch_size * FLAGS.num_gpus
         examples_per_sec = num_examples_per_step / duration

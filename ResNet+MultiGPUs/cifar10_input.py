@@ -225,7 +225,10 @@ def build_input(dataset='cifar10', data_path, batch_size=128, mode):
   image_bytes = image_size * image_size * depth
   record_bytes = label_bytes + label_offset + image_bytes
 
-  data_files = tf.gfile.Glob(data_path)
+  if mode == 'train':
+    data_files = tf.gfile.Glob(os.path.join(data_path, 'data*'))
+  else:
+    data_files = tf.gfile.Glob(os.path.join(data_path, 'test*'))
   file_queue = tf.train.string_input_producer(data_files, shuffle=True)
   # Read examples from files in the filename queue.
   reader = tf.FixedLengthRecordReader(record_bytes=record_bytes)
